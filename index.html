@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPMC ELC Photo Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        /* Password Protection */
+        #password-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #password-screen h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+
+        .password-form {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .password-form p {
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .password-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .password-form input[type="password"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 2px solid #000000;
+            outline: none;
+        }
+
+        .password-form button {
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-left: 10px;
+            letter-spacing: 1px;
+            transition: background-color 0.3s;
+        }
+
+        .password-form button:hover {
+            background-color: #0d1452;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        #main-content {
+            display: none;
+        }
+
+        main {
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .section-logo {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .photo-grid.collapsed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-auto-rows: 0;
+            overflow: hidden;
+        }
+
+        .photo-grid.collapsed .photo-item {
+            display: none;
+        }
+
+        .photo-grid.collapsed .photo-item:nth-child(-n+6) {
+            display: block;
+        }
+
+        .photo-item {
+            position: relative;
+            background-color: #f5f5f5;
+            cursor: pointer;
+            overflow: hidden;
+            aspect-ratio: 1;
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.02);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .toggle-button {
+            background-color: transparent;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 10px 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* Fullscreen Modal */
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fullscreen-modal.active {
+            display: flex;
+        }
+
+        .fullscreen-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .fullscreen-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000000;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000000;
+            border: none;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .nav-button.prev {
+            left: 20px;
+        }
+
+        .nav-button.next {
+            right: 20px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        @media (max-width: 768px) {
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            #password-screen h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Protection Screen -->
+    <div id="password-screen">
+        <header>
+            <img src="photos/JP Morgan/JP Morgan - JPMC Logo - V1 - 011326.png" alt="JPMC Logo" class="logo">
+        </header>
+        <h1>LET'S<br>TALK</h1>
+        <div class="password-form">
+            <p>This content is password-protected. To view it, please enter the password below.</p>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+            <button type="button" onclick="checkPassword()">Enter</button>
+            <div class="error-message" id="error-message"></div>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden until password is correct) -->
+    <div id="main-content">
+        <header>
+            <img src="photos/JP Morgan/JP Morgan - JPMC Logo - V1 - 011326.png" alt="JPMC Logo" class="logo">
+        </header>
+
+        <main id="gallery-container">
+            <!-- Gallery sections will be dynamically generated here -->
+        </main>
+
+        <footer>
+            <p>&copy; 2026 JP Morgan Chase, All rights reserved</p>
+        </footer>
+    </div>
+
+    <!-- Fullscreen Modal -->
+    <div class="fullscreen-modal" id="fullscreen-modal">
+        <button class="close-button" onclick="closeFullscreen()">×</button>
+        <button class="nav-button prev" onclick="navigateImage(-1)">‹</button>
+        <button class="nav-button next" onclick="navigateImage(1)">›</button>
+        <div class="fullscreen-content">
+            <img id="fullscreen-image" src="" alt="Full size image">
+        </div>
+    </div>
+
+    <script>
+        // Password protection
+        const correctPassword = 'jpmc2026';
+
+        function checkPassword() {
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('error-message');
+
+            if (passwordInput.value === correctPassword) {
+                document.getElementById('password-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                loadGallery();
+            } else {
+                errorMessage.textContent = 'Incorrect password. Please try again.';
+                passwordInput.value = '';
+            }
+        }
+
+        // Allow Enter key to submit password
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // Photo gallery data structure
+        const galleries = {
+            'JP Morgan': {
+                logo: 'photos/JP Morgan/JP Morgan - JPMC Logo - V1 - 011326.png',
+                photos: []
+            },
+            'JP Morgan Asset Management': {
+                logo: 'photos/JP Morgan Asset Management/JP Morgan - Asset Mgmt Logo - V1 - 011626.png',
+                photos: []
+            },
+            'JP Morgan Chase': {
+                logo: 'photos/JP Morgan Chase/JP Morgan - JPMC Logo Chase - V1 - 011326.png',
+                photos: []
+            },
+            'JP Morgan Chase Travel': {
+                logo: 'photos/JP Morgan Chase Travel/JP Morgan - JPMC Logo Chase Travle - V1 - 011326.png',
+                photos: []
+            },
+            'JP Morgan Private Bank': {
+                logo: 'photos/JP Morgan Private Bank/JP Morgan - JPMC Logo Private Bank - V1 - 011326.png',
+                photos: []
+            },
+            'JP Morgan Wealth Management': {
+                logo: 'photos/JP Morgan Wealth Management/JP Morgan - Wealth Management Logo - V1 - 011626.png',
+                photos: []
+            }
+        };
+
+        // This will be populated with actual photo paths
+        const photoPaths = {
+  "JP Morgan": [
+    "photos/JP Morgan/JP Morgan - Banker Duffle Bag - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Diagonal Dopp Kit - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Dog Bone Toy - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Dog Bowl - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Dog Collar - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Dog Leash - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Hexagon Shaped Dog Toy - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Leather Poop Bag Carrier - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Notepad - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Pet Sling Bag - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Pineapple Tote Bag - V1 - 011326.png",
+    "photos/JP Morgan/JP Morgan - Porcelain Tray L - V1 - 011326.png",
+    "photos/JP Morgan/JP Morgan - Shipping Box - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Shopping Bag - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Tic Tac Toe - V1 - 012126.png",
+    "photos/JP Morgan/JP Morgan - Wind Duffle Bag - V1 - 012126.png"
+  ],
+  "JP Morgan Asset Management": [
+    "photos/JP Morgan Asset Management/JP Morgan - 6 Panel Neoprene Cap - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Candle 27cl - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Canvas Boat Tote - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Canvas Tote - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Convertible Tote - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Dopp Kit Box - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Foldable Duffle - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Luggage tag and card holder - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Packing cubes - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Soft Cover Notebook - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Tote Bag - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Turkish Towel - V1 - 012126.png",
+    "photos/JP Morgan Asset Management/JP Morgan - Valet with Dust cover - V1 - 012126.png"
+  ],
+  "JP Morgan Chase": [
+    "photos/JP Morgan Chase/JP Morgan - 6 Panel Cap - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Electronic Pouch - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Enamel Key Chain - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Foldable Golf Umbrella - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Leather Valet 8x8 - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Luggage tag - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Luggage tag and Passport holder - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Metal Bookmark - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Mug - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - New Dopp Kit - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - PU Hard Cover Notebook - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Reusable Tote Bag - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Sock - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Stylus Pen - V1 - 011426.png",
+    "photos/JP Morgan Chase/JP Morgan - Wall Growth Chart - Tube - V1 - 012126.png",
+    "photos/JP Morgan Chase/JP Morgan - Wall Growth Chart - V1 - 012126.png",
+    "photos/JP Morgan Chase/JP Morgan - Woven Tie - V1 - 011426.png"
+  ],
+  "JP Morgan Chase Travel": [
+    "photos/JP Morgan Chase Travel/JP Morgan - Bucket Hat - V1 - 012126.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Electronics Pouch - V1 - 011626.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Luggage Strap - V1 - 011626.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Luggage tag and AirTag Set - V1 - 011326.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Pullover Hoodie - V1 - 011326.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Scarf - V1 - 011326.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Scarf - V2 - 011326.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Scarf - V3 - 011326.png",
+    "photos/JP Morgan Chase Travel/JP Morgan - Scrunchies - Grey - V1 - 011326.png"
+  ],
+  "JP Morgan Private Bank": [
+    "photos/JP Morgan Private Bank/JP Morgan - 6 Panel Cotton Cap - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Acrylic Box - V1 - 012126.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Build & Tumble Tower Game - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Currency Passport Pouch - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Folded Umbrella - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Frost Tumbler - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Herschel Classic Backpack - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Leather Backgammon - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Leather Notebook Cover - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Pen & Notebook Set - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Piggy Bank - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Playing Card - 8x8in - V1 - 042623.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Playing Card - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - Cameron - V7 - 012523.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - Casa - Opt1 - V8 - 032723.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - China - Opt3 - V5 - 032723.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - France - V15 - 032723.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - Lincoln - Opt1 - V9 - 012523.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - Mexico - Opt3 - V5 - 032723.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Porcelain Tray - Large - UK - V4 - 032723.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Power Bank - 8x8in - V1 - 042623.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Puzzle - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Sporty Cap - V1 - 011326.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Tic Tac Toe - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Tumbler Manhattan - V1 - 011426.png",
+    "photos/JP Morgan Private Bank/JP Morgan - Zip Jacket - V1 - 011426.png"
+  ],
+  "JP Morgan Wealth Management": [
+    "photos/JP Morgan Wealth Management/JP Morgan - Cap - V1 - 011626.png",
+    "photos/JP Morgan Wealth Management/JP Morgan - Carry All Tote - V1 - 011626.png",
+    "photos/JP Morgan Wealth Management/JP Morgan - Leather Notebook Cover set - V1 - 011626.png"
+  ]
+};
+
+        function loadGallery() {
+            // Populate galleries with photos
+            Object.keys(photoPaths).forEach(section => {
+                if (galleries[section]) {
+                    galleries[section].photos = photoPaths[section];
+                }
+            });
+
+            const container = document.getElementById('gallery-container');
+
+            Object.keys(galleries).forEach((sectionName, sectionIndex) => {
+                const section = galleries[sectionName];
+                if (section.photos.length === 0) return;
+
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'gallery-section';
+                sectionDiv.id = `section-${sectionIndex}`;
+
+                sectionDiv.innerHTML = `
+                    <div class="section-header">
+                        <img src="${section.logo}" alt="${sectionName} Logo" class="section-logo">
+                    </div>
+                    <div class="photo-grid collapsed" id="grid-${sectionIndex}">
+                        ${section.photos.map((photo, index) => `
+                            <div class="photo-item" onclick="openFullscreen('${sectionName}', ${index})">
+                                <img src="${photo}" alt="${sectionName} photo ${index + 1}" loading="lazy">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="toggle-button" onclick="toggleSection(${sectionIndex})" id="toggle-${sectionIndex}">
+                        Show All
+                    </button>
+                `;
+
+                container.appendChild(sectionDiv);
+            });
+        }
+
+        function toggleSection(sectionIndex) {
+            const grid = document.getElementById(`grid-${sectionIndex}`);
+            const button = document.getElementById(`toggle-${sectionIndex}`);
+
+            if (grid.classList.contains('collapsed')) {
+                grid.classList.remove('collapsed');
+                button.textContent = 'Show Less';
+            } else {
+                grid.classList.add('collapsed');
+                button.textContent = 'Show All';
+                // Scroll to section header
+                document.getElementById(`section-${sectionIndex}`).scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        let currentSection = '';
+        let currentImageIndex = 0;
+
+        function openFullscreen(sectionName, imageIndex) {
+            currentSection = sectionName;
+            currentImageIndex = imageIndex;
+
+            const modal = document.getElementById('fullscreen-modal');
+            const img = document.getElementById('fullscreen-image');
+
+            img.src = galleries[sectionName].photos[imageIndex];
+            modal.classList.add('active');
+
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreen-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function navigateImage(direction) {
+            const photos = galleries[currentSection].photos;
+            currentImageIndex += direction;
+
+            if (currentImageIndex < 0) {
+                currentImageIndex = photos.length - 1;
+            } else if (currentImageIndex >= photos.length) {
+                currentImageIndex = 0;
+            }
+
+            document.getElementById('fullscreen-image').src = photos[currentImageIndex];
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFullscreen();
+            } else if (e.key === 'ArrowLeft') {
+                navigateImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateImage(1);
+            }
+        });
+
+        // Close modal when clicking outside image
+        document.getElementById('fullscreen-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
