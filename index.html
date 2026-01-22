@@ -512,20 +512,23 @@
                     ? `<h2 class="section-title">J.P.Morgan Asset Management</h2>`
                     : `<img src="${section.logo}" alt="${sectionName} Logo" class="section-logo" onerror="this.parentElement.innerHTML='<h2 class=\\'section-title\\'>${sectionName}</h2>'">`;
 
+                // Only show toggle button if more than 4 photos
+                const showToggle = section.photos.length > 4;
+
                 sectionDiv.innerHTML = `
                     <div class="section-header">
                         ${logoHTML}
                     </div>
-                    <div class="photo-grid collapsed" id="grid-${sectionIndex}">
+                    <div class="photo-grid ${showToggle ? 'collapsed' : ''}" id="grid-${sectionIndex}">
                         ${section.photos.map((photo, index) => `
                             <div class="photo-item" onclick="openFullscreen('${sectionName}', ${index})">
                                 <img src="${photo}" alt="${sectionName} photo ${index + 1}" loading="lazy">
                             </div>
                         `).join('')}
                     </div>
-                    <button class="toggle-button" onclick="toggleSection(${sectionIndex})" id="toggle-${sectionIndex}">
+                    ${showToggle ? `<button class="toggle-button" onclick="toggleSection(${sectionIndex})" id="toggle-${sectionIndex}">
                         Show All
-                    </button>
+                    </button>` : ''}
                 `;
 
                 container.appendChild(sectionDiv);
