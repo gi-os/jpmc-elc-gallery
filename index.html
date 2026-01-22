@@ -24,7 +24,7 @@
         }
 
         .logo {
-            max-width: 200px;
+            max-width: 300px;
             height: auto;
         }
 
@@ -115,6 +115,7 @@
         .section-header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 30px;
             gap: 20px;
         }
@@ -125,10 +126,11 @@
         }
 
         .section-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 400;
             font-family: Georgia, 'Times New Roman', serif;
             letter-spacing: 0.5px;
+            margin-left: auto;
         }
 
         .photo-grid {
@@ -508,7 +510,7 @@
 
                 // Check if logo exists or use text for Asset Management
                 const logoHTML = sectionName === 'JP Morgan Asset Management'
-                    ? `<h2 class="section-title">JP Morgan Asset Management</h2>`
+                    ? `<h2 class="section-title">J.P.Morgan Asset Management</h2>`
                     : `<img src="${section.logo}" alt="${sectionName} Logo" class="section-logo" onerror="this.parentElement.innerHTML='<h2 class=\\'section-title\\'>${sectionName}</h2>'">`;
 
                 sectionDiv.innerHTML = `
