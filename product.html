@@ -89,13 +89,13 @@
 
         /* Header */
         header {
-            padding: 20px 40px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 30px 40px;
             text-align: center;
+            background-color: #ffffff;
         }
 
         .logo {
-            max-width: 200px;
+            max-width: 180px;
             height: auto;
         }
 
@@ -149,15 +149,66 @@
             color: #000000;
         }
 
+        .collapsible-section {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            user-select: none;
+        }
+
+        .collapsible-header:hover {
+            background-color: #f0f0f0;
+        }
+
+        .collapsible-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .collapsible-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .collapsible-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapsible-content.open {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .collapsible-inner {
+            padding: 20px;
+        }
+
         .product-description {
             font-size: 1rem;
             line-height: 1.8;
             color: #333333;
-            margin-bottom: 40px;
         }
 
         .product-features {
-            margin-bottom: 40px;
+            margin-bottom: 0;
         }
 
         .product-features h3 {
@@ -280,6 +331,10 @@
     </style>
 </head>
 <body>
+    <header>
+        <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
+    </header>
+
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
@@ -298,10 +353,6 @@
         </ul>
     </nav>
 
-    <header>
-        <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
-    </header>
-
     <div class="product-container">
         <div class="product-image">
             <img id="product-img" src="" alt="Product Image">
@@ -312,21 +363,40 @@
             <h1 class="product-title" id="product-name">Banker Duffle Bag</h1>
             <div class="product-price">Inquire for Pricing</div>
 
-            <div class="product-description">
-                <p>Elevate your travel experience with this sophisticated duffle bag, expertly crafted for the modern professional. Combining timeless design with exceptional functionality, this piece embodies the perfect balance of style and utility.</p>
-                <p>Whether for business trips or weekend getaways, this duffle bag ensures you travel in style while keeping your essentials organized and secure.</p>
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h3>Description</h3>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="collapsible-inner">
+                        <div class="product-description">
+                            <p>Elevate your travel experience with this sophisticated duffle bag, expertly crafted for the modern professional. Combining timeless design with exceptional functionality, this piece embodies the perfect balance of style and utility.</p>
+                            <p>Whether for business trips or weekend getaways, this duffle bag ensures you travel in style while keeping your essentials organized and secure.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="product-features">
-                <h3>Key Features</h3>
-                <ul>
-                    <li>Premium materials with reinforced stitching for durability</li>
-                    <li>Multiple compartments for organized storage</li>
-                    <li>Comfortable padded handles and adjustable shoulder strap</li>
-                    <li>Water-resistant exterior to protect your belongings</li>
-                    <li>Elegant design suitable for professional and casual settings</li>
-                    <li>Secure zipper closures with branded hardware</li>
-                </ul>
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h3>Key Features</h3>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="collapsible-inner">
+                        <div class="product-features">
+                            <ul>
+                                <li>Premium materials with reinforced stitching for durability</li>
+                                <li>Multiple compartments for organized storage</li>
+                                <li>Comfortable padded handles and adjustable shoulder strap</li>
+                                <li>Water-resistant exterior to protect your belongings</li>
+                                <li>Elegant design suitable for professional and casual settings</li>
+                                <li>Secure zipper closures with branded hardware</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="product-specs">
@@ -360,10 +430,19 @@
     </footer>
 
     <script>
+        // Collapsible toggle function
+        function toggleCollapsible(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.collapsible-icon');
+
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+
         // Get product info from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const productImage = urlParams.get('image');
-        const productName = urlParams.get('name');
+        let productName = urlParams.get('name');
         const brandName = urlParams.get('brand');
 
         if (productImage) {
@@ -374,6 +453,12 @@
         }
 
         if (productName) {
+            // Clean up product name - remove version numbers and dates
+            productName = productName
+                .replace(/\s*-\s*V\d+\s*-\s*\d+/gi, '') // Remove " - V1 - 012126" pattern
+                .replace(/JP Morgan\s*-\s*/gi, '')       // Remove "JP Morgan - " prefix
+                .trim();
+
             document.getElementById('product-name').textContent = productName;
             document.title = productName + ' - LR Paris Gallery';
         }
