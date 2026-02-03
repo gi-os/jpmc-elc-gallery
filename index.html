@@ -514,6 +514,11 @@
             }
         }
 
+        // Listen for hash changes (when clicking brand links)
+        window.addEventListener('hashchange', function() {
+            handleHashNavigation();
+        });
+
         // Check session on page load - wrapped to ensure DOM is ready
         window.addEventListener('DOMContentLoaded', function() {
             checkSession();
