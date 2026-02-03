@@ -684,7 +684,7 @@
                     <div class="section-header">
                         ${logoHTML}
                     </div>
-                    <div class="photo-grid ${showToggle ? 'collapsed' : ''}" id="grid-${sectionIndex}">
+                    <div class="photo-grid" id="grid-${sectionIndex}">
                         ${section.photos.map((photo, index) => {
                             const productName = photo.split('/').pop().replace('.png', '').replace(/-/g, ' ');
                             const productUrl = `product.html?image=${encodeURIComponent(photo)}&name=${encodeURIComponent(productName)}&brand=${encodeURIComponent(sectionName)}`;
@@ -696,7 +696,7 @@
                         }).join('')}
                     </div>
                     ${showToggle ? `<button class="toggle-button" onclick="toggleSection(${sectionIndex})" id="toggle-${sectionIndex}">
-                        Show All
+                        Show Less
                     </button>` : ''}
                 `;
 
