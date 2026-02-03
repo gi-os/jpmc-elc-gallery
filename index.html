@@ -487,8 +487,10 @@
             }
         });
 
-        // Check session on page load
-        checkSession();
+        // Check session on page load - wrapped to ensure DOM is ready
+        window.addEventListener('DOMContentLoaded', function() {
+            checkSession();
+        });
 
         // Photo gallery data structure
         const galleries = {
