@@ -458,8 +458,10 @@
         if (productName) {
             // Clean up product name - remove version numbers and dates
             productName = productName
-                .replace(/\s*-\s*V\d+\s*-\s*\d+/gi, '') // Remove " - V1 - 012126" pattern
-                .replace(/JP Morgan\s*-\s*/gi, '')       // Remove "JP Morgan - " prefix
+                .replace(/\s*-\s*V\d+\s*-\s*\d+/gi, '')  // Remove " - V1 - 012126" pattern (with hyphens)
+                .replace(/\s+V\d+\s+\d+/gi, '')           // Remove " V1 011626" pattern (without hyphens)
+                .replace(/JP\s*Morgan\s*-\s*/gi, '')      // Remove "JP Morgan - " prefix
+                .replace(/^JP\s*Morgan\s+/gi, '')         // Remove "JP Morgan " prefix (without hyphen)
                 .trim();
 
             document.getElementById('product-name').textContent = productName;
