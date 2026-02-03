@@ -506,12 +506,40 @@
             const hash = window.location.hash.substring(1); // Remove the # symbol
             if (hash) {
                 setTimeout(() => {
-                    const section = document.querySelector(`[data-brand-id="${hash}"]`);
-                    if (section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const targetSection = document.querySelector(`[data-brand-id="${hash}"]`);
+                    if (targetSection) {
+                        // Expand the target brand and collapse all others
+                        expandBrandSection(targetSection);
+                        // Scroll to the section
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 }, 300); // Small delay to ensure gallery is loaded
             }
+        }
+
+        // Expand a specific brand section and collapse all others
+        function expandBrandSection(targetSection) {
+            const allSections = document.querySelectorAll('.gallery-section');
+            allSections.forEach((section) => {
+                const sectionId = section.id;
+                const sectionIndex = sectionId.replace('section-', '');
+                const grid = section.querySelector('.photo-grid');
+                const button = section.querySelector('.toggle-button');
+
+                if (section === targetSection) {
+                    // Expand this section
+                    if (grid && grid.classList.contains('collapsed')) {
+                        grid.classList.remove('collapsed');
+                        if (button) button.textContent = 'Show Less';
+                    }
+                } else {
+                    // Collapse other sections
+                    if (grid && !grid.classList.contains('collapsed') && button) {
+                        grid.classList.add('collapsed');
+                        button.textContent = 'Show All';
+                    }
+                }
+            });
         }
 
         // Listen for hash changes (when clicking brand links)
@@ -684,7 +712,7 @@
                     <div class="section-header">
                         ${logoHTML}
                     </div>
-                    <div class="photo-grid" id="grid-${sectionIndex}">
+                    <div class="photo-grid ${showToggle ? 'collapsed' : ''}" id="grid-${sectionIndex}">
                         ${section.photos.map((photo, index) => {
                             const productName = photo.split('/').pop().replace('.png', '').replace(/-/g, ' ');
                             const productUrl = `product.html?image=${encodeURIComponent(photo)}&name=${encodeURIComponent(productName)}&brand=${encodeURIComponent(sectionName)}`;
@@ -696,7 +724,7 @@
                         }).join('')}
                     </div>
                     ${showToggle ? `<button class="toggle-button" onclick="toggleSection(${sectionIndex})" id="toggle-${sectionIndex}">
-                        Show Less
+                        Show All
                     </button>` : ''}
                 `;
 
