@@ -509,10 +509,8 @@
                 sectionDiv.className = 'gallery-section';
                 sectionDiv.id = `section-${sectionIndex}`;
 
-                // Check if logo exists or use text for Asset Management
-                const logoHTML = sectionName === 'JP Morgan Asset Management'
-                    ? `<h2 class="section-title">J.P.Morgan Asset Management</h2>`
-                    : `<img src="${section.logo}" alt="${sectionName} Logo" class="section-logo" onerror="this.parentElement.innerHTML='<h2 class=\\'section-title\\'>${sectionName}</h2>'">`;
+                // Display logo for all sections
+                const logoHTML = `<img src="${section.logo}" alt="${sectionName} Logo" class="section-logo" onerror="this.parentElement.innerHTML='<h2 class=\\'section-title\\'>${sectionName}</h2>'">`;
 
                 // Only show toggle button if more than 4 photos
                 const showToggle = section.photos.length > 4;
