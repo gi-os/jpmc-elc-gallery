@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - LR Paris Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #000000;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 18px 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #333333;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #000000;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: #ffffff;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: block;
+            text-transform: none;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #333333;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        /* Product Container */
+        .product-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .product-image {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            padding: 40px;
+            background-color: #fafafa;
+        }
+
+        .product-details {
+            padding: 20px 0;
+        }
+
+        .brand-name {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+
+        .product-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333333;
+            margin-bottom: 40px;
+        }
+
+        .product-features {
+            margin-bottom: 40px;
+        }
+
+        .product-features h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .product-features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .product-features ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95rem;
+            color: #555555;
+        }
+
+        .product-features ul li:before {
+            content: "•";
+            margin-right: 10px;
+            color: #000000;
+        }
+
+        .product-specs {
+            margin-bottom: 40px;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #000000;
+        }
+
+        .product-specs h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .spec-value {
+            color: #666666;
+        }
+
+        .cta-button {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: #333333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #000000;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                margin: 30px auto;
+            }
+
+            .product-image {
+                position: relative;
+                top: 0;
+            }
+
+            .product-title {
+                font-size: 2rem;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            color: #666666;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li class="dropdown">
+                <a href="#brands">Brands ▼</a>
+                <div class="dropdown-content">
+                    <a href="index.html#jp-morgan">JP Morgan</a>
+                    <a href="index.html#jp-morgan-asset-management">JP Morgan Asset Management</a>
+                    <a href="index.html#jp-morgan-chase">JP Morgan Chase</a>
+                    <a href="index.html#jp-morgan-chase-travel">JP Morgan Chase Travel</a>
+                    <a href="index.html#jp-morgan-private-bank">JP Morgan Private Bank</a>
+                    <a href="index.html#jp-morgan-wealth-management">JP Morgan Wealth Management</a>
+                </div>
+            </li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
+    </header>
+
+    <div class="product-container">
+        <div class="product-image">
+            <img id="product-img" src="" alt="Product Image">
+        </div>
+
+        <div class="product-details">
+            <div class="brand-name" id="brand-name">JP MORGAN</div>
+            <h1 class="product-title" id="product-name">Banker Duffle Bag</h1>
+            <div class="product-price">Inquire for Pricing</div>
+
+            <div class="product-description">
+                <p>Elevate your travel experience with this sophisticated duffle bag, expertly crafted for the modern professional. Combining timeless design with exceptional functionality, this piece embodies the perfect balance of style and utility.</p>
+                <p>Whether for business trips or weekend getaways, this duffle bag ensures you travel in style while keeping your essentials organized and secure.</p>
+            </div>
+
+            <div class="product-features">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Premium materials with reinforced stitching for durability</li>
+                    <li>Multiple compartments for organized storage</li>
+                    <li>Comfortable padded handles and adjustable shoulder strap</li>
+                    <li>Water-resistant exterior to protect your belongings</li>
+                    <li>Elegant design suitable for professional and casual settings</li>
+                    <li>Secure zipper closures with branded hardware</li>
+                </ul>
+            </div>
+
+            <div class="product-specs">
+                <h3>Specifications</h3>
+                <div class="spec-row">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Premium Fabric</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Dimensions</span>
+                    <span class="spec-value">22" × 12" × 10"</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Weight</span>
+                    <span class="spec-value">2.5 lbs</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Care Instructions</span>
+                    <span class="spec-value">Spot clean only</span>
+                </div>
+            </div>
+
+            <button class="cta-button" onclick="alert('Thank you for your interest! Please contact us for ordering information.')">Request Information</button>
+
+            <a href="index.html" class="back-link">← Back to Gallery</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 LR Paris, All rights reserved</p>
+    </footer>
+
+    <script>
+        // Get product info from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const productImage = urlParams.get('image');
+        const productName = urlParams.get('name');
+        const brandName = urlParams.get('brand');
+
+        if (productImage) {
+            document.getElementById('product-img').src = productImage;
+        } else {
+            // Default to banker duffle bag
+            document.getElementById('product-img').src = 'photos/JP Morgan/JP Morgan - Banker Duffle Bag - V1 - 012126.png';
+        }
+
+        if (productName) {
+            document.getElementById('product-name').textContent = productName;
+            document.title = productName + ' - LR Paris Gallery';
+        }
+
+        if (brandName) {
+            document.getElementById('brand-name').textContent = brandName.toUpperCase();
+        }
+    </script>
+</body>
+</html>

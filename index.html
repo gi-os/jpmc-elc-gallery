@@ -17,6 +17,76 @@
             color: #000000;
         }
 
+        /* Navigation Bar */
+        nav {
+            background-color: #000000;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            display: block;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 18px 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #333333;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #000000;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: #ffffff;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: block;
+            text-transform: none;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #333333;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         /* Header */
         header {
             padding: 20px 40px;
@@ -320,6 +390,23 @@
 
     <!-- Main Content (Hidden until password is correct) -->
     <div id="main-content">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#brands">Brands ▼</a>
+                    <div class="dropdown-content" id="brands-dropdown">
+                        <a href="#jp-morgan">JP Morgan</a>
+                        <a href="#jp-morgan-asset-management">JP Morgan Asset Management</a>
+                        <a href="#jp-morgan-chase">JP Morgan Chase</a>
+                        <a href="#jp-morgan-chase-travel">JP Morgan Chase Travel</a>
+                        <a href="#jp-morgan-private-bank">JP Morgan Private Bank</a>
+                        <a href="#jp-morgan-wealth-management">JP Morgan Wealth Management</a>
+                    </div>
+                </li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </nav>
         <header>
             <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
         </header>
@@ -525,11 +612,15 @@
                         ${logoHTML}
                     </div>
                     <div class="photo-grid ${showToggle ? 'collapsed' : ''}" id="grid-${sectionIndex}">
-                        ${section.photos.map((photo, index) => `
-                            <div class="photo-item" onclick="openFullscreen('${sectionName}', ${index})">
+                        ${section.photos.map((photo, index) => {
+                            const productName = photo.split('/').pop().replace('.png', '').replace(/-/g, ' ');
+                            const productUrl = `product.html?image=${encodeURIComponent(photo)}&name=${encodeURIComponent(productName)}&brand=${encodeURIComponent(sectionName)}`;
+                            return `
+                            <div class="photo-item" onclick="window.location.href='${productUrl}'">
                                 <img src="${photo}" alt="${sectionName} photo ${index + 1}" loading="lazy">
                             </div>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
                     ${showToggle ? `<button class="toggle-button" onclick="toggleSection(${sectionIndex})" id="toggle-${sectionIndex}">
                         Show All
