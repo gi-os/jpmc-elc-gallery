@@ -11,6 +11,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #ffffff;
@@ -189,6 +193,7 @@
         /* Gallery Section */
         .gallery-section {
             margin-bottom: 80px;
+            scroll-margin-top: 80px; /* Offset for sticky nav */
         }
 
         .section-header {
@@ -487,6 +492,28 @@
             }
         });
 
+        // Scroll to brand section when clicking brand links
+        function scrollToBrand(brandName) {
+            const brandId = brandName.toLowerCase().replace(/\s+/g, '-');
+            const section = document.querySelector(`[data-brand-id="${brandId}"]`);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Handle hash navigation on page load
+        function handleHashNavigation() {
+            const hash = window.location.hash.substring(1); // Remove the # symbol
+            if (hash) {
+                setTimeout(() => {
+                    const section = document.querySelector(`[data-brand-id="${hash}"]`);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 300); // Small delay to ensure gallery is loaded
+            }
+        }
+
         // Check session on page load - wrapped to ensure DOM is ready
         window.addEventListener('DOMContentLoaded', function() {
             checkSession();
@@ -638,6 +665,10 @@
                 sectionDiv.className = 'gallery-section';
                 sectionDiv.id = `section-${sectionIndex}`;
 
+                // Add brand-specific ID for navigation
+                const brandId = sectionName.toLowerCase().replace(/\s+/g, '-');
+                sectionDiv.setAttribute('data-brand-id', brandId);
+
                 // Display logo for all sections
                 const logoHTML = `<img src="${section.logo}" alt="${sectionName} Logo" class="section-logo" onerror="this.parentElement.innerHTML='<h2 class=\\'section-title\\'>${sectionName}</h2>'">`;
 
@@ -666,6 +697,9 @@
 
                 container.appendChild(sectionDiv);
             });
+
+            // Handle hash navigation after gallery is loaded
+            handleHashNavigation();
         }
 
         function toggleSection(sectionIndex) {
