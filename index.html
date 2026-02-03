@@ -19,11 +19,12 @@
 
         /* Navigation Bar */
         nav {
-            background-color: #000000;
+            background-color: #ffffff;
             padding: 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         nav ul {
@@ -41,7 +42,7 @@
 
         nav ul li a {
             display: block;
-            color: #ffffff;
+            color: #000000;
             text-decoration: none;
             padding: 18px 30px;
             font-size: 0.95rem;
@@ -52,7 +53,7 @@
         }
 
         nav ul li a:hover {
-            background-color: #333333;
+            background-color: #f5f5f5;
         }
 
         .dropdown {
@@ -62,25 +63,27 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #000000;
+            background-color: #ffffff;
             min-width: 250px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             z-index: 1;
             top: 100%;
             left: 0;
+            border: 1px solid #e0e0e0;
         }
 
         .dropdown-content a {
-            color: #ffffff;
+            color: #000000;
             padding: 14px 20px;
             text-decoration: none;
             display: block;
             text-transform: none;
             font-size: 0.9rem;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .dropdown-content a:hover {
-            background-color: #333333;
+            background-color: #f5f5f5;
         }
 
         .dropdown:hover .dropdown-content {
@@ -89,12 +92,13 @@
 
         /* Header */
         header {
-            padding: 20px 40px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 30px 40px;
+            text-align: center;
+            background-color: #ffffff;
         }
 
         .logo {
-            max-width: 450px;
+            max-width: 180px;
             height: auto;
         }
 
@@ -390,6 +394,9 @@
 
     <!-- Main Content (Hidden until password is correct) -->
     <div id="main-content">
+        <header>
+            <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
+        </header>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -407,9 +414,6 @@
                 <li><a href="#contact">Contact Us</a></li>
             </ul>
         </nav>
-        <header>
-            <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
-        </header>
 
         <main id="gallery-container">
             <!-- Gallery sections will be dynamically generated here -->
@@ -433,12 +437,40 @@
     <script>
         // Password protection
         const correctPassword = 'jpmc2026';
+        const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+
+        // Check if user has valid session on page load
+        function checkSession() {
+            const sessionData = localStorage.getItem('gallerySession');
+            if (sessionData) {
+                const { timestamp } = JSON.parse(sessionData);
+                const now = Date.now();
+
+                // Check if session is still valid (within 1 hour)
+                if (now - timestamp < SESSION_DURATION) {
+                    // Valid session, show gallery
+                    document.getElementById('password-screen').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    loadGallery();
+                    return true;
+                } else {
+                    // Session expired, clear it
+                    localStorage.removeItem('gallerySession');
+                }
+            }
+            return false;
+        }
 
         function checkPassword() {
             const passwordInput = document.getElementById('password');
             const errorMessage = document.getElementById('error-message');
 
             if (passwordInput.value === correctPassword) {
+                // Store session with timestamp
+                localStorage.setItem('gallerySession', JSON.stringify({
+                    timestamp: Date.now()
+                }));
+
                 document.getElementById('password-screen').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
                 loadGallery();
@@ -454,6 +486,9 @@
                 checkPassword();
             }
         });
+
+        // Check session on page load
+        checkSession();
 
         // Photo gallery data structure
         const galleries = {
