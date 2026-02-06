@@ -333,22 +333,19 @@
     </style>
 </head>
 <body>
-    <header>
-        <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
-    </header>
-
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
             <li class="dropdown">
                 <a href="#brands">Brands ▼</a>
                 <div class="dropdown-content">
-                    <a href="index.html#jp-morgan">JP Morgan</a>
-                    <a href="index.html#jp-morgan-asset-management">JP Morgan Asset Management</a>
-                    <a href="index.html#jp-morgan-chase">JP Morgan Chase</a>
-                    <a href="index.html#jp-morgan-chase-travel">JP Morgan Chase Travel</a>
-                    <a href="index.html#jp-morgan-private-bank">JP Morgan Private Bank</a>
-                    <a href="index.html#jp-morgan-wealth-management">JP Morgan Wealth Management</a>
+                    <a href="index.html#j-p-morgan">J.P. Morgan</a>
+                    <a href="index.html#j-p-morgan-asset-management">J.P. Morgan Asset Management</a>
+                    <a href="index.html#jpmorganchase">JPMorganChase</a>
+                    <a href="index.html#chase-travel">Chase Travel</a>
+                    <a href="index.html#j-p-morgan-private-bank">J.P. Morgan Private Bank</a>
+                    <a href="index.html#j-p-morgan-wealth-management">J.P. Morgan Wealth Management</a>
+                    <a href="index.html#fast-track">Fast Track</a>
                 </div>
             </li>
             <li><a href="#contact">Contact Us</a></li>
@@ -361,7 +358,7 @@
         </div>
 
         <div class="product-details">
-            <div class="brand-name" id="brand-name">JP MORGAN</div>
+            <div class="brand-name" id="brand-name">J.P. MORGAN</div>
             <h1 class="product-title" id="product-name">Banker Duffle Bag</h1>
             <div class="product-price">Inquire for Pricing</div>
 
@@ -459,8 +456,8 @@
             productName = productName
                 .replace(/\s*-\s*V\d+\s*-\s*\d+/gi, '')  // Remove " - V1 - 012126" pattern (with hyphens)
                 .replace(/\s+V\d+\s+\d+/gi, '')           // Remove " V1 011626" pattern (without hyphens)
-                .replace(/JP\s*Morgan\s*-\s*/gi, '')      // Remove "JP Morgan - " prefix
-                .replace(/^JP\s*Morgan\s+/gi, '')         // Remove "JP Morgan " prefix (without hyphen)
+                .replace(/J\.?P\.?\s*Morgan\s*-\s*/gi, '')      // Remove "JP Morgan - " or "J.P. Morgan -" prefix
+                .replace(/^J\.?P\.?\s*Morgan\s+/gi, '')         // Remove "JP Morgan " or "J.P. Morgan" prefix (without hyphen)
                 .trim();
 
             document.getElementById('product-name').textContent = productName;

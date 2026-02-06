@@ -385,9 +385,6 @@
 <body>
     <!-- Password Protection Screen -->
     <div id="password-screen">
-        <header>
-            <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
-        </header>
         <div class="password-form">
             <p>This content is password-protected. To view it, please enter the password below.</p>
             <label for="password">Password:</label>
@@ -399,21 +396,19 @@
 
     <!-- Main Content (Hidden until password is correct) -->
     <div id="main-content">
-        <header>
-            <img src="photos/LR Paris/LR-Paris-Logo.png" alt="LR Paris Logo" class="logo">
-        </header>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li class="dropdown">
                     <a href="#brands">Brands ▼</a>
                     <div class="dropdown-content" id="brands-dropdown">
-                        <a href="#jp-morgan">JP Morgan</a>
-                        <a href="#jp-morgan-asset-management">JP Morgan Asset Management</a>
-                        <a href="#jp-morgan-chase">JP Morgan Chase</a>
-                        <a href="#jp-morgan-chase-travel">JP Morgan Chase Travel</a>
-                        <a href="#jp-morgan-private-bank">JP Morgan Private Bank</a>
-                        <a href="#jp-morgan-wealth-management">JP Morgan Wealth Management</a>
+                        <a href="#j-p-morgan">J.P. Morgan</a>
+                        <a href="#j-p-morgan-asset-management">J.P. Morgan Asset Management</a>
+                        <a href="#jpmorganchase">JPMorganChase</a>
+                        <a href="#chase-travel">Chase Travel</a>
+                        <a href="#j-p-morgan-private-bank">J.P. Morgan Private Bank</a>
+                        <a href="#j-p-morgan-wealth-management">J.P. Morgan Wealth Management</a>
+                        <a href="#fast-track">Fast Track</a>
                     </div>
                 </li>
                 <li><a href="#contact">Contact Us</a></li>
@@ -554,35 +549,39 @@
 
         // Photo gallery data structure
         const galleries = {
-            'JP Morgan': {
+            'J.P. Morgan': {
                 logo: 'photos/JP Morgan/JP Morgan - JPMC Logo - V1 - 011326.png',
                 photos: []
             },
-            'JP Morgan Asset Management': {
+            'J.P. Morgan Asset Management': {
                 logo: 'photos/JP Morgan Asset Management/JP-Morgan-Asset-Mgmt-Logo-New.png',
                 photos: []
             },
-            'JP Morgan Chase': {
+            'JPMorganChase': {
                 logo: 'photos/JP Morgan Chase/JP Morgan - JPMC Logo Chase - V1 - 011326.png',
                 photos: []
             },
-            'JP Morgan Chase Travel': {
+            'Chase Travel': {
                 logo: 'photos/JP Morgan Chase Travel/JP Morgan - JPMC Logo Chase Travle - V1 - 011326.png',
                 photos: []
             },
-            'JP Morgan Private Bank': {
+            'J.P. Morgan Private Bank': {
                 logo: 'photos/JP Morgan Private Bank/JP Morgan - JPMC Logo Private Bank - V1 - 011326.png',
                 photos: []
             },
-            'JP Morgan Wealth Management': {
+            'J.P. Morgan Wealth Management': {
                 logo: 'photos/JP Morgan Wealth Management/JP Morgan - Wealth Management Logo - V1 - 011626.png',
+                photos: []
+            },
+            'Fast Track': {
+                logo: '',
                 photos: []
             }
         };
 
         // This will be populated with actual photo paths
         const photoPaths = {
-  "JP Morgan": [
+  "J.P. Morgan": [
     "photos/JP Morgan/JP Morgan - Banker Duffle Bag - V1 - 012126.png",
     "photos/JP Morgan/JP Morgan - Diagonal Dopp Kit - V1 - 012126.png",
     "photos/JP Morgan/JP Morgan - Dog Bone Toy - V1 - 012126.png",
@@ -600,7 +599,7 @@
     "photos/JP Morgan/JP Morgan - Tic Tac Toe - V1 - 012126.png",
     "photos/JP Morgan/JP Morgan - Wind Duffle Bag - V1 - 012126.png"
   ],
-  "JP Morgan Asset Management": [
+  "J.P. Morgan Asset Management": [
     "photos/JP Morgan Asset Management/JP Morgan - 6 Panel Neoprene Cap - V1 - 012126.png",
     "photos/JP Morgan Asset Management/JP Morgan - Candle 27cl - V1 - 012126.png",
     "photos/JP Morgan Asset Management/JP Morgan - Canvas Boat Tote - V1 - 012126.png",
@@ -615,7 +614,7 @@
     "photos/JP Morgan Asset Management/JP Morgan - Turkish Towel - V1 - 012126.png",
     "photos/JP Morgan Asset Management/JP Morgan - Valet with Dust cover - V1 - 012126.png"
   ],
-  "JP Morgan Chase": [
+  "JPMorganChase": [
     "photos/JP Morgan Chase/JP Morgan - 6 Panel Cap - V1 - 011426.png",
     "photos/JP Morgan Chase/JP Morgan - Electronic Pouch - V1 - 011426.png",
     "photos/JP Morgan Chase/JP Morgan - Enamel Key Chain - V1 - 011426.png",
@@ -634,7 +633,7 @@
     "photos/JP Morgan Chase/JP Morgan - Wall Growth Chart - V1 - 012126.png",
     "photos/JP Morgan Chase/JP Morgan - Woven Tie - V1 - 011426.png"
   ],
-  "JP Morgan Chase Travel": [
+  "Chase Travel": [
     "photos/JP Morgan Chase Travel/JP Morgan - Bucket Hat - V1 - 012126.png",
     "photos/JP Morgan Chase Travel/JP Morgan - Electronics Pouch - V1 - 011626.png",
     "photos/JP Morgan Chase Travel/JP Morgan - Luggage Strap - V1 - 011626.png",
@@ -645,7 +644,7 @@
     "photos/JP Morgan Chase Travel/JP Morgan - Scarf - V3 - 011326.png",
     "photos/JP Morgan Chase Travel/JP Morgan - Scrunchies - Grey - V1 - 011326.png"
   ],
-  "JP Morgan Private Bank": [
+  "J.P. Morgan Private Bank": [
     "photos/JP Morgan Private Bank/JP Morgan - 6 Panel Cotton Cap - V1 - 011426.png",
     "photos/JP Morgan Private Bank/JP Morgan - Acrylic Box - V1 - 012126.png",
     "photos/JP Morgan Private Bank/JP Morgan - Build & Tumble Tower Game - V1 - 011426.png",
@@ -673,10 +672,22 @@
     "photos/JP Morgan Private Bank/JP Morgan - Tumbler Manhattan - V1 - 011426.png",
     "photos/JP Morgan Private Bank/JP Morgan - Zip Jacket - V1 - 011426.png"
   ],
-  "JP Morgan Wealth Management": [
+  "J.P. Morgan Wealth Management": [
     "photos/JP Morgan Wealth Management/JP Morgan - Cap - V1 - 011626.png",
     "photos/JP Morgan Wealth Management/JP Morgan - Carry All Tote - V1 - 011626.png",
     "photos/JP Morgan Wealth Management/JP Morgan - Leather Notebook Cover set - V1 - 011626.png"
+  ],
+  "Fast Track": [
+    "photos/Fast Track/Insulated Mug.png",
+    "photos/Fast Track/Ceramic Mug .png",
+    "photos/Fast Track/Voyager Duffel.png",
+    "photos/Fast Track/Executive Pen with Case.png",
+    "photos/Fast Track/Leather Bound Notebook.png",
+    "photos/Fast Track/Moleskin Notebook.png",
+    "photos/Fast Track/Rains Day Backpack.png",
+    "photos/Fast Track/MagSafe Charger.png",
+    "photos/Fast Track/Larq Twist Top Bottle.png",
+    "photos/Fast Track/Brooks Brothers Quilted Vest .png"
   ]
 };
 
